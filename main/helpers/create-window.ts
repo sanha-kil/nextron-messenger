@@ -1,8 +1,4 @@
-import {
-  screen,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-} from 'electron';
+import { screen, BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import Store from 'electron-store';
 
 export default (windowName: string, options: BrowserWindowConstructorOptions): BrowserWindow => {
@@ -39,15 +35,17 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
   };
 
   const resetToDefaults = () => {
-    const bounds = screen.getPrimaryDisplay().bounds;
-    return Object.assign({}, defaultSize, {
-      x: (bounds.width - defaultSize.width) / 2,
-      y: (bounds.height - defaultSize.height) / 2,
-    });
+    const { width, height } = screen.getPrimaryDisplay().bounds;
+    const size = {
+      x: (width - defaultSize.width) / 2,
+      y: (height - defaultSize.height) / 2,
+    };
+
+    return size;
   };
 
-  const ensureVisibleOnSomeDisplay = windowState => {
-    const visible = screen.getAllDisplays().some(display => {
+  const ensureVisibleOnSomeDisplay = (windowState) => {
+    const visible = screen.getAllDisplays().some((display) => {
       return windowWithinBounds(windowState, display.bounds);
     });
     if (!visible) {
