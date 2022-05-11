@@ -8,9 +8,9 @@ function ChatList() {
       <SideBar />
       <ChatListContents>
         <TopBar>채팅</TopBar>
-        <Chats>
+        <ChatingList>
           <ChatElement />
-        </Chats>
+        </ChatingList>
       </ChatListContents>
     </ChatListContainer>
   );
@@ -23,15 +23,16 @@ const ChatListContainer = styled.main`
 `;
 
 const ChatListContents = styled.section`
-  width: 100%;
+  flex: 1;
 `;
 
 const TopBar = styled.div`
+  position: sticky;
   padding: 24px 16px;
   border-bottom: 1px solid #f2f2f2;
   font-size: 28px;
 `;
 
-const Chats = styled.ul``;
+const ChatingList = styled.ul``;
 
 const ChatElement = styled.li``;
