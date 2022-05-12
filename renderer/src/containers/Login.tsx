@@ -2,7 +2,7 @@ import React, { ChangeEvent, MouseEvent, useState } from 'react';
 import Router from 'next/router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import styled from 'styled-components';
-import firebaseAuth from '../../firebase';
+import { firebaseAuth } from '../../firebase';
 
 interface LoginInfoInterface {
   email: string;

@@ -9,7 +9,7 @@ function ChatList() {
       <ChatListContents>
         <TopBar>채팅</TopBar>
         <ChatingList>
-          <ChatElement />
+          <ChatElement>채팅방 1</ChatElement>
         </ChatingList>
       </ChatListContents>
     </ChatListContainer>

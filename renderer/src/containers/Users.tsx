@@ -1,25 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
 import styled from 'styled-components';
-import firebaseAuth from '../../firebase';
+import { getAuth } from 'firebase/auth';
+import { firebaseAuth, firebaseDB, firebaseApp } from '../../firebase';
 import SideBar from '../components/SideBar';
 
-function Users(): JSX.Element {
-  const { displayName } = firebaseAuth.currentUser;
+interface UserListInterface {
+  uid: string;
+  displayName: string;
+}
+
+function Users({ data }): JSX.Element {
+  const [userList, setUserList] = useState<UserListInterface[]>([]);
+  const user = getAuth(firebaseApp).currentUser;
+
+  useEffect(() => {
+    (async () => {
+      const ref = doc(firebaseDB, 'users', 'users');
+      const res = (await getDoc(ref)).data();
+      const target = Object.values(res);
+      setUserList(target);
+    })();
+  }, []);
 
   return (
     <UserContainer>
       <SideBar />
       <UserContent>
-        <TopBar>유저</TopBar>
+        <TopBar>채팅</TopBar>
         <UserList>
-          <MyElement>{displayName}</MyElement>
-          <UserElement>친구 1</UserElement>
-          <UserElement>친구 2</UserElement>
+          <MyElement>{user?.displayName}</MyElement>
+          {userList.map(
+            ({ uid, displayName }) => uid !== user?.uid && <UserElement key={uid}>{displayName}</UserElement>,
+          )}
         </UserList>
       </UserContent>
     </UserContainer>
   );
 }
+
+export const getServerSideProps = async (context) => {
+  const ref = doc(firebaseDB, '', 'users');
+  const res = await getDoc(ref);
+
+  return { props: { res } };
+};
 
 export default Users;
 

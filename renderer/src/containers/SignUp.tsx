@@ -1,8 +1,9 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import Router from 'next/router';
 import styled from 'styled-components';
-import firebaseAuth from '../../firebase';
+import { firebaseAuth, firebaseDB } from '../../firebase';
 
 interface SignupInfoInterface {
   email: string;
@@ -35,9 +36,15 @@ function SignUp(): JSX.Element {
       await updateProfile(auth.currentUser, {
         displayName: name,
       });
+      const ref = doc(firebaseDB, 'users', 'users');
+      await setDoc(
+        ref,
+        { [auth.currentUser.uid]: { displayName: auth.currentUser.displayName, uid: auth.currentUser.uid } },
+        { merge: true },
+      );
       Router.push('/users');
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
