@@ -1,15 +1,37 @@
-import React from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import Router from 'next/router';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { firebaseDB } from '../../firebase';
 import SideBar from '../components/SideBar';
 
-function ChatList() {
+function ChatList(): JSX.Element {
+  const [chatList, setChatList] = useState([]);
+  console.log(chatList);
+
+  useEffect(() => {
+    (async () => {
+      const target = [];
+      const querySnapshot = await getDocs(collection(firebaseDB, 'chats'));
+      querySnapshot.forEach((doc) => {
+        target.push({
+          ...doc.data(),
+          id: doc.id,
+        });
+      });
+      setChatList(target);
+    })();
+  }, []);
+
   return (
     <ChatListContainer>
       <SideBar />
       <ChatListContents>
         <TopBar>채팅</TopBar>
         <ChatingList>
-          <ChatElement>채팅방 1</ChatElement>
+          {chatList.map(({ id, name }) => (
+            <ChatElement onClick={() => Router.push(`/chatroom/${id}`)}>{name}</ChatElement>
+          ))}
         </ChatingList>
       </ChatListContents>
     </ChatListContainer>

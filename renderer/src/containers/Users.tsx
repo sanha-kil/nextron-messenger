@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import styled from 'styled-components';
 import { getAuth } from 'firebase/auth';
-import { firebaseAuth, firebaseDB, firebaseApp } from '../../firebase';
+import { firebaseDB, firebaseApp } from '../../firebase';
 import SideBar from '../components/SideBar';
 
 interface UserListInterface {
@@ -10,15 +10,17 @@ interface UserListInterface {
   displayName: string;
 }
 
-function Users({ data }): JSX.Element {
+function Users(): JSX.Element {
   const [userList, setUserList] = useState<UserListInterface[]>([]);
   const user = getAuth(firebaseApp).currentUser;
 
   useEffect(() => {
     (async () => {
-      const ref = doc(firebaseDB, 'users', 'users');
-      const res = (await getDoc(ref)).data();
-      const target = Object.values(res);
+      const querySnapshot = await getDocs(collection(firebaseDB, 'users'));
+      console.log(querySnapshot);
+
+      const target = [];
+      querySnapshot.forEach((doc) => target.push(doc.data()));
       setUserList(target);
     })();
   }, []);
