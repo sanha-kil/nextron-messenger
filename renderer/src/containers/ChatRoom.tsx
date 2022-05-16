@@ -26,16 +26,15 @@ function ChatRoom(): JSX.Element {
       });
     }
     inputRef.current.value = '';
-    scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
     scrollTargetRef.current.scrollIntoView();
-  }, []);
+  }, [messages]);
 
   return (
     <ChatRoomContainer>
-      <ChatHead>
+      <ChatTop>
         <BackButton
           onClick={() => {
             Router.push('/users');
@@ -43,8 +42,8 @@ function ChatRoom(): JSX.Element {
         >
           <AiOutlineArrowLeft />
         </BackButton>
-        채팅방
-      </ChatHead>
+        <ChatHead>채팅방</ChatHead>
+      </ChatTop>
       <ChatWrapper>
         {messages?.map(({ senderUid, id, text, sender }, idx) =>
           senderUid === user.uid ? (
@@ -78,7 +77,8 @@ const ChatRoomContainer = styled.main`
   height: 100vh;
 `;
 
-const ChatHead = styled.div`
+const ChatTop = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,7 +86,16 @@ const ChatHead = styled.div`
   border-bottom: 1px solid #c2c2c2;
 `;
 
-const BackButton = styled.div``;
+const BackButton = styled.div`
+  position: absolute;
+  top: 26px;
+  left: 20px;
+  font-size: 30px;
+`;
+
+const ChatHead = styled.div`
+  font-size: 30px;
+`;
 
 const ChatWrapper = styled.div`
   flex: 1;

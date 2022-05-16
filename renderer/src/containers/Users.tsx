@@ -49,7 +49,9 @@ function Users(): JSX.Element {
       <UserContent>
         <TopBar>채팅</TopBar>
         <UserList>
+          <MyHead>내 프로필</MyHead>
           <MyElement>{currentUser?.displayName}</MyElement>
+          <UserHead>유저 목록</UserHead>
           {userList.map(
             ({ uid, displayName }) =>
               uid !== currentUser?.uid && (
@@ -90,15 +92,29 @@ const UserList = styled.ul`
   overflow: auto;
 `;
 
+const MyHead = styled.li`
+  padding: 16px 16px 10px;
+  font-size: 12px;
+  color: #c2c2c2;
+`;
+
 const MyElement = styled.li`
   width: 100%;
-  padding: 16px;
-  border-bottom: 1px soild #f2f2f2;
-  font-size: 22px;
+  padding: 18px 18px 18px 16px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 24px;
+`;
+
+const UserHead = styled.li`
+  padding: 50px 16px 10px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 12px;
+  color: #c2c2c2;
 `;
 
 const UserElement = styled.li`
   width: 100%;
   padding: 16px;
+  border-bottom: 1px solid #f2f2f2;
   font-size: 20px;
 `;
