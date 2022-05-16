@@ -8,9 +8,10 @@ import {
   limit,
   onSnapshot,
 } from 'firebase/firestore';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 import styled from 'styled-components';
 import { firebaseAuth, firebaseDB } from '../../firebase';
 
@@ -83,17 +84,26 @@ function ChatRoom(): JSX.Element {
 
   return (
     <ChatRoomContainer>
-      <ChatHead>채팅방</ChatHead>
+      <ChatHead>
+        <BackButton
+          onClick={() => {
+            Router.push('/users');
+          }}
+        >
+          <AiOutlineArrowLeft />
+        </BackButton>
+        채팅방
+      </ChatHead>
       <ChatWrapper>
-        {message.map((el, idx) =>
-          el.senderUid === user.uid ? (
-            <MyChatElement key={el.id}>
-              <ChatBubble>{el.text}</ChatBubble>
+        {message?.map(({ senderUid, id, text, sender }, idx) =>
+          senderUid === user.uid ? (
+            <MyChatElement key={id}>
+              <ChatBubble>{text}</ChatBubble>
             </MyChatElement>
           ) : (
-            <OthersChatElement key={el.id}>
-              {el.senderUid !== message[idx - 1].senderUid && <ChatOwner>{el.sender}</ChatOwner>}
-              <ChatBubble>{el.text}</ChatBubble>
+            <OthersChatElement key={id}>
+              {senderUid !== message[idx - 1]?.senderUid && <ChatOwner>{sender}</ChatOwner>}
+              <ChatBubble>{text}</ChatBubble>
             </OthersChatElement>
           ),
         )}
@@ -124,6 +134,8 @@ const ChatHead = styled.div`
   height: 88px;
   border-bottom: 1px solid #c2c2c2;
 `;
+
+const BackButton = styled.div``;
 
 const ChatWrapper = styled.div`
   flex: 1;

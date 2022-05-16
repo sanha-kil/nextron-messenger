@@ -37,9 +37,10 @@ function SignUp(): JSX.Element {
         displayName: name,
       });
 
-      await addDoc(collection(firebaseDB, 'users'), {
+      await setDoc(doc(firebaseDB, 'users', auth.currentUser.uid), {
         displayName: auth.currentUser.displayName,
         uid: auth.currentUser.uid,
+        chatList: {},
       });
 
       Router.push('/users');

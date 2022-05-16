@@ -7,7 +7,6 @@ import SideBar from '../components/SideBar';
 
 function ChatList(): JSX.Element {
   const [chatList, setChatList] = useState([]);
-  console.log(chatList);
 
   useEffect(() => {
     (async () => {
@@ -30,7 +29,9 @@ function ChatList(): JSX.Element {
         <TopBar>채팅</TopBar>
         <ChatingList>
           {chatList.map(({ id, name }) => (
-            <ChatElement onClick={() => Router.push(`/chatroom/${id}`)}>{name}</ChatElement>
+            <ChatElement key={id} onClick={() => Router.push(`/chatroom/${id}`)}>
+              {name}
+            </ChatElement>
           ))}
         </ChatingList>
       </ChatListContents>

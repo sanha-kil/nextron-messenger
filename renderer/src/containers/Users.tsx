@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
+import Router from 'next/router';
 import { getAuth } from 'firebase/auth';
 import { firebaseDB, firebaseApp } from '../../firebase';
 import SideBar from '../components/SideBar';
@@ -12,12 +13,29 @@ interface UserListInterface {
 
 function Users(): JSX.Element {
   const [userList, setUserList] = useState<UserListInterface[]>([]);
-  const user = getAuth(firebaseApp).currentUser;
+  const { currentUser } = getAuth();
+
+  const onRoomClick = async (targetUid: string) => {
+    const userId = currentUser.uid;
+    const userRef = doc(firebaseDB, 'users', userId);
+    const { chatList } = await (await getDoc(userRef)).data();
+
+    if (!chatList[targetUid]) {
+      const { id } = await addDoc(collection(firebaseDB, 'chats'), {});
+      await updateDoc(doc(firebaseDB, 'users', targetUid), {
+        chatList: { ...chatList, [userId]: id },
+      });
+      await updateDoc(doc(firebaseDB, 'users', userId), {
+        chatList: { ...chatList, [targetUid]: id },
+      });
+    }
+
+    Router.push(`/chatroom/${chatList[targetUid]}`);
+  };
 
   useEffect(() => {
     (async () => {
       const querySnapshot = await getDocs(collection(firebaseDB, 'users'));
-      console.log(querySnapshot);
 
       const target = [];
       querySnapshot.forEach((doc) => target.push(doc.data()));
@@ -31,9 +49,14 @@ function Users(): JSX.Element {
       <UserContent>
         <TopBar>채팅</TopBar>
         <UserList>
-          <MyElement>{user?.displayName}</MyElement>
+          <MyElement>{currentUser?.displayName}</MyElement>
           {userList.map(
-            ({ uid, displayName }) => uid !== user?.uid && <UserElement key={uid}>{displayName}</UserElement>,
+            ({ uid, displayName }) =>
+              uid !== currentUser?.uid && (
+                <UserElement key={uid} onClick={() => onRoomClick(uid)}>
+                  {displayName}
+                </UserElement>
+              ),
           )}
         </UserList>
       </UserContent>
