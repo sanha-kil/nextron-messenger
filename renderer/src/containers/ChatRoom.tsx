@@ -1,25 +1,17 @@
-import {
-  addDoc,
-  query as fbQuery,
-  collection,
-  getDocs,
-  orderBy,
-  serverTimestamp,
-  limit,
-  onSnapshot,
-} from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import Router, { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import styled from 'styled-components';
 import { firebaseAuth, firebaseDB } from '../../firebase';
+import { useGetChatting } from '../hooks/useGetChatting';
 
 function ChatRoom(): JSX.Element {
-  const [message, setMessage] = useState([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollTargetRef = useRef<HTMLDivElement>(null);
   const { query } = useRouter();
+  const messages = useGetChatting(`chats/${query.id}/messages`);
   const user = firebaseAuth.currentUser;
 
   const sendMessage = async (event) => {
@@ -34,52 +26,11 @@ function ChatRoom(): JSX.Element {
       });
     }
     inputRef.current.value = '';
+    scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const loadMessage = async () => {
-    const target = [];
-
-    const aRef = collection(firebaseDB, `chats/${query.id}/messages`);
-    const q = fbQuery(aRef, orderBy('createdAt', 'asc'), limit(200));
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      target.push({
-        ...doc.data(),
-        id: doc.id,
-      });
-    });
-
-    setMessage(target);
-  };
-
-  // useEffect(() => {
-  //   loadMessage();
-  // }, []);
 
   useEffect(() => {
     scrollTargetRef.current.scrollIntoView();
-  });
-
-  useEffect(() => {
-    const aRef = collection(firebaseDB, `chats/${query.id}/messages`);
-    const q = fbQuery(aRef, orderBy('createdAt', 'asc'), limit(200));
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const target = [];
-
-      querySnapshot.forEach((doc) => {
-        target.push({
-          ...doc.data(),
-          id: doc.id,
-        });
-      });
-
-      setMessage(target);
-      scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    return unsubscribe;
   }, []);
 
   return (
@@ -95,14 +46,14 @@ function ChatRoom(): JSX.Element {
         채팅방
       </ChatHead>
       <ChatWrapper>
-        {message?.map(({ senderUid, id, text, sender }, idx) =>
+        {messages?.map(({ senderUid, id, text, sender }, idx) =>
           senderUid === user.uid ? (
             <MyChatElement key={id}>
               <ChatBubble>{text}</ChatBubble>
             </MyChatElement>
           ) : (
             <OthersChatElement key={id}>
-              {senderUid !== message[idx - 1]?.senderUid && <ChatOwner>{sender}</ChatOwner>}
+              {senderUid !== messages[idx - 1]?.senderUid && <ChatOwner>{sender}</ChatOwner>}
               <ChatBubble>{text}</ChatBubble>
             </OthersChatElement>
           ),

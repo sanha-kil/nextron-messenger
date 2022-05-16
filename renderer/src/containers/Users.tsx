@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { addDoc, collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
 import Router from 'next/router';
 import { getAuth } from 'firebase/auth';
-import { firebaseDB, firebaseApp } from '../../firebase';
+import { firebaseDB } from '../../firebase';
 import SideBar from '../components/SideBar';
 
 interface UserListInterface {
@@ -63,13 +63,6 @@ function Users(): JSX.Element {
     </UserContainer>
   );
 }
-
-export const getServerSideProps = async (context) => {
-  const ref = doc(firebaseDB, '', 'users');
-  const res = await getDoc(ref);
-
-  return { props: { res } };
-};
 
 export default Users;
 
