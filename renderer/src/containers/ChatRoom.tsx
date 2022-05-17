@@ -11,14 +11,15 @@ function ChatRoom(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollTargetRef = useRef<HTMLDivElement>(null);
   const { query } = useRouter();
-  const messages = useGetChatting(`chats/${query.id}/messages`);
   const user = firebaseAuth.currentUser;
+  const CHAT_TYPE = query.isGroupChat ? 'groupChats' : 'chats';
+  const messages = useGetChatting(`${CHAT_TYPE}/${query.id}/messages`);
 
   const sendMessage = async (event) => {
     event.preventDefault();
     const target = inputRef.current?.value;
     if (target.length > 0) {
-      await addDoc(collection(firebaseDB, `chats/${query.id}/messages`), {
+      await addDoc(collection(firebaseDB, `${CHAT_TYPE}/${query.id}/messages`), {
         createdAt: serverTimestamp(),
         sender: user.displayName,
         senderUid: user.uid,

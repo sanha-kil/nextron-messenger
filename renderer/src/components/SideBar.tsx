@@ -50,14 +50,11 @@ const SideBarContainer = styled.nav`
   padding: 80px 20px 30px;
   border-right: 1px solid #f2f2f2;
   background-color: white;
-  z-index: 999;
 `;
-
-const ButtonWrapper = styled.div``;
 
 const SideBarButton = styled.button`
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-size: 30px;
   color: #035397;
   cursor: pointer;

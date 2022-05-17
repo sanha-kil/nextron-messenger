@@ -30,7 +30,7 @@ function Users(): JSX.Element {
       });
     }
 
-    Router.push(`/chatroom/${chatList[targetUid]}`);
+    Router.push(`/chatroom/${chatList[targetUid]}?isGroupChat=false`);
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ function Users(): JSX.Element {
     <UserContainer>
       <SideBar />
       <UserContent>
-        <TopBar>채팅</TopBar>
+        <TopBar>유저 목록</TopBar>
         <UserList>
           <MyHead>내 프로필</MyHead>
           <MyElement>{currentUser?.displayName}</MyElement>
@@ -80,6 +80,7 @@ const UserContent = styled.div`
 
 const TopBar = styled.div`
   position: sticky;
+  display: flex;
   top: 0;
   padding: 24px 16px;
   border-bottom: 1px solid #f2f2f2;
