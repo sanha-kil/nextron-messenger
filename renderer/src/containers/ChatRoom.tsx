@@ -11,8 +11,10 @@ function ChatRoom(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollTargetRef = useRef<HTMLDivElement>(null);
   const { query } = useRouter();
+  const checkChat = query.isGroupChat === 'true';
+  const CHAT_TYPE = checkChat ? 'groupChats' : 'chats';
   const user = firebaseAuth.currentUser;
-  const CHAT_TYPE = query.isGroupChat ? 'groupChats' : 'chats';
+
   const messages = useGetChatting(`${CHAT_TYPE}/${query.id}/messages`);
 
   const sendMessage = async (event) => {

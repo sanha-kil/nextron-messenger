@@ -3,6 +3,7 @@ import Router from 'next/router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import styled from 'styled-components';
 import { firebaseAuth } from '../../firebase';
+import Modal from '../components/Modal';
 
 interface LoginInfoInterface {
   email: string;
@@ -14,6 +15,7 @@ function Login(): JSX.Element {
     email: '',
     password: '',
   });
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const adjustInput = (type: string, event: ChangeEvent<HTMLInputElement>): void => {
     const input = event.target.value;
@@ -28,7 +30,7 @@ function Login(): JSX.Element {
       await signInWithEmailAndPassword(firebaseAuth, email, password);
       Router.push('/users');
     } catch (error) {
-      alert(error);
+      setIsModalOpen(true)
     }
   };
 
@@ -54,6 +56,9 @@ function Login(): JSX.Element {
           <SignupButton onClick={moveSignup}>회원가입</SignupButton>
         </ButtonWrapper>
       </LoginForm>
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+        <ModalInfo>이메일과 비밀번호를 다시 확인해주세요</ModalInfo>
+      </Modal>
     </LoginContainer>
   );
 }
@@ -124,4 +129,8 @@ const SignupButton = styled.button`
   background-color: white;
   border-radius: 8px;
   border: 1px solid #f2f2f2;
+`;
+
+const ModalInfo = styled.p`
+  font-size: 18px;
 `;

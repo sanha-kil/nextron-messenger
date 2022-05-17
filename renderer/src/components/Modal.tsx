@@ -44,7 +44,8 @@ const ModalWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 50px 40px 40px;
+  padding: 50px 30px 40px;
+  min-width: 70vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

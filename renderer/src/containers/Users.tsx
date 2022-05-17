@@ -30,7 +30,8 @@ function Users(): JSX.Element {
       });
     }
 
-    Router.push(`/chatroom/${chatList[targetUid]}?isGroupChat=false`);
+    // Router.push(`/chatroom/${chatList[targetUid]}?isGroupChat=false`);
+    Router.push({ pathname: `/chatroom/${chatList[targetUid]}`, query: { isGroupChat: false } });
   };
 
   useEffect(() => {

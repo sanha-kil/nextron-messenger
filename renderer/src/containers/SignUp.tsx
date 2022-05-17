@@ -1,9 +1,10 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import Router from 'next/router';
 import styled from 'styled-components';
 import { firebaseAuth, firebaseDB } from '../../firebase';
+import Modal from '../components/Modal';
 
 interface SignupInfoInterface {
   email: string;
@@ -19,6 +20,7 @@ function SignUp(): JSX.Element {
     checkPassword: '',
     name: '',
   });
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const adjustInput = (type: string, event: ChangeEvent<HTMLInputElement>): void => {
     const input = event.target.value;
@@ -45,7 +47,7 @@ function SignUp(): JSX.Element {
 
       Router.push('/users');
     } catch (error) {
-      console.log(error);
+      setIsModalOpen(true);
     }
   };
 
@@ -83,6 +85,9 @@ function SignUp(): JSX.Element {
           <BackButton onClick={moveToLogin}>돌아가기</BackButton>
         </ButtonWrapper>
       </SignupForm>
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+        <ModalInfo>아이디는 이메일 형식, 비밀번호는 6자 이상이여야 합니다. 다시 확인해주세요</ModalInfo>
+      </Modal>
     </SignupContainer>
   );
 }
@@ -154,4 +159,8 @@ const BackButton = styled.button`
   background-color: white;
   border-radius: 8px;
   border: 1px solid #f2f2f2;
+`;
+
+const ModalInfo = styled.p`
+  font-size: 18px;
 `;

@@ -19,7 +19,7 @@ function ChatList(): JSX.Element {
       roomName,
       id,
     });
-    Router.push(`/chatroom/${id}?isGroupChat=true`);
+    Router.push({ pathname: `/chatroom/${id}`, query: { isGroupChat: true } });
   };
 
   useEffect(() => {
@@ -48,7 +48,10 @@ function ChatList(): JSX.Element {
         </TopBar>
         <ChattngList>
           {chatList.map(({ id, roomName }) => (
-            <ChatElement key={id} onClick={() => Router.push(`/chatroom/${id}`)}>
+            <ChatElement
+              key={id}
+              onClick={() => Router.push({ pathname: `/chatroom/${id}`, query: { isGroupChat: true } })}
+            >
               {roomName}
             </ChatElement>
           ))}
