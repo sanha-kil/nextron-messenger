@@ -53,7 +53,7 @@ function SignUp(): JSX.Element {
 
   const moveToLogin = (event: MouseEvent) => {
     event.preventDefault();
-    Router.push('/login');
+    Router.push('/');
   };
 
   return (

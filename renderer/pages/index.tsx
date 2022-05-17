@@ -1,16 +1,6 @@
-import { GetServerSideProps } from 'next';
+import React from 'react';
+import Login from '../src/containers/Login';
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  if (res) {
-    res.writeHead(302, {
-      Location: '/login',
-    });
-    res.end();
-  }
+const container = () => <Login />;
 
-  return {
-    props: {},
-  };
-};
-
-export default () => '';
+export default container;
