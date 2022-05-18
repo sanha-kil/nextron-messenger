@@ -54,3 +54,7 @@
     │
     └── firebase.ts                   // 파이어베이스 설정 파일
 ```
+
+### 설치
+- Window : http://naver.me/55nfAM6x
+- mac : http://naver.me/FXLJ88lf
